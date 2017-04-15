@@ -48,3 +48,14 @@ let ``Given digit parser when given input of digits then parsing is successful``
     let result = execute digitParser input
     Assert.That(result, Is.EqualTo(Success ('0', ['1';'9'])))
 
+[<Test>]
+let ``Given three integer characters and an int parser then returns correct int`` () =
+    let input = ['1';'2';'3']
+    let digitParser = any ['0' .. '9']
+    let threeDigitParser = digitParser .>>. digitParser .>>. digitParser
+    let tupleFunc ((a,b),c) = new string [|a;b;c|]
+    let tripleDigitParser = map tupleFunc threeDigitParser
+    let intParser = map int tripleDigitParser
+    let result = execute intParser input
+    Assert.That(result, Is.EqualTo(Success (123, [])))
+

@@ -21,6 +21,14 @@ let execute parser =
     let (Parser p) = parser
     fun (input : char list) -> p input
 
+let map (f : 'T -> 'U) (parser : Parser<'T>) =
+    let innerParser (input : char list) =
+        let result = (execute parser input)
+        match result with
+        | Failure f -> Failure f
+        | Success (a, rest) -> Success ((f a), rest)
+    (Parser innerParser)
+
 let andThen (a : Parser<'T>) (b : Parser<'U>) =
     let innerAndThen (input : char list) =
         let resultOfFirst = (execute a input)

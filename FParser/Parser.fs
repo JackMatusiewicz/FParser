@@ -41,3 +41,8 @@ let orElse (a : Parser<'T>) (b : Parser<'T>) =
         | Success r -> Success r
         | Failure _ -> (execute b input)
     (Parser parse)
+
+let pick = List.reduce orElse
+
+let any (characters : char list) =
+    (characters |> List.map charParser) |> pick
